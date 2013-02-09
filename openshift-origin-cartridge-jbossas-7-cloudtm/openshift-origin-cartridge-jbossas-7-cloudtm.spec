@@ -1,9 +1,9 @@
-%global cartridgedir %{_libexecdir}/openshift/cartridges/jbossas-7
+%global cartridgedir %{_libexecdir}/openshift/cartridges/jbossas-7-cloudtm
 %global jbossver 7.1.0.Final
 %global oldjbossver 7.0.2.Final
 
-Summary:       Provides JBossAS7 support
-Name:          openshift-origin-cartridge-jbossas-7
+Summary:       Provides JBossAS7 with CloudTM support
+Name:          openshift-origin-cartridge-jbossas-7-cloudtm
 Version:       1.5.2
 Release:       1%{?dist}
 Group:         Development/Languages

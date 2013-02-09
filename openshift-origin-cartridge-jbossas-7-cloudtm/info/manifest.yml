@@ -1,5 +1,5 @@
-Name: jbossas-7
-Display-Name: JBoss Application Server 7.1
+Name: jbossas-7-cloudtm
+Display-Name: JBoss Application Server 7.1 with CloudTM tools
 Description: "The leading open source Java EE6 application server for enterprise Java applications. Popular development frameworks include Seam, CDI, Weld, and Spring."
 Version: 7.1.0
 License: ASL 2.0

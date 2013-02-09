@@ -1,11 +1,12 @@
 #!/bin/bash
 set -x
-#set -e
+set -e
 
 yum install bc -y
 
-rm -rf origin-server > /dev/null 2>&1
-git clone https://github.com/openshift/origin-server.git
+#rm -rf origin-server > /dev/null 2>&1
+#git clone https://github.com/openshift/origin-server.git
+
 cart="openshift-origin-cartridge-jbossas-7-cloudtm"
 openshift_cartridges_dir="origin-server/cartridges"
 
@@ -72,8 +73,8 @@ cp abstract-jboss/info/hooks/threaddump build/"$cart"/info/hooks/threaddump
 echo "Installing the cartridge"
 echo "------------------------"
 
-rm -rf /usr/libexec/openshift/cartridges/. > /dev/null 2>&1
-#cp build/"$cart" /usr/libexec/openshift/cartridges/. -r
+rm -rf /usr/libexec/openshift/cartridges/"$cart" > /dev/null 2>&1
+cp build/"$cart" /usr/libexec/openshift/cartridges/. -r
 
 echo "Clearing cache"
 echo "--------------"
