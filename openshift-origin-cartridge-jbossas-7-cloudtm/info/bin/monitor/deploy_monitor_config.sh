@@ -12,7 +12,7 @@ IP="$3"
 setup_app_dir_vars
 setup_user_vars
 
-CLOUDTM_DIR=`echo $APP_HOME/cloudtm | tr -s /`
+CLOUDTM_DIR=`echo $APP_HOME/jbossas-7-cloudtm/cloudtm | tr -s /`
 [ -d "$CLOUDTM_DIR" ]  ||   CLOUDTM_DIR=`echo $APP_HOME/$application | tr -s /`
 
 # Following not useful for the purposes of this script 
