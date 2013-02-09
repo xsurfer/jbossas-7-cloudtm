@@ -73,8 +73,9 @@ cp abstract-jboss/info/hooks/threaddump build/"$cart"/info/hooks/threaddump
 echo "Installing the cartridge"
 echo "------------------------"
 
-rm -rf /usr/libexec/openshift/cartridges/"$cart" > /dev/null 2>&1
-cp build/"$cart" /usr/libexec/openshift/cartridges/. -r
+rm -rf /usr/libexec/openshift/cartridges/jbossas-7-cloudtm > /dev/null 2>&1
+mv build/"$cart" build/jbossas-7-cloudtm
+cp build/jbossas-7-cloudtm /usr/libexec/openshift/cartridges/. -r
 
 echo "Clearing cache"
 echo "--------------"
