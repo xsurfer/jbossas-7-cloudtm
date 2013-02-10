@@ -1,92 +1,71 @@
 #!/bin/bash -e
 
-# This script in incharged to start/stop/restart and so on monitor app
-
-source /etc/openshift/node.conf
+source "/etc/openshift/node.conf"
 source ${CARTRIDGE_BASE_PATH}/abstract/info/lib/util
 
-export STOPTIMEOUT=20
-
 # Import Environment Variables
-for f in ~/.env/*
-do
-    . $f
-done
+for f in ~/.env/*; do . $f; done
 
-CLOUDTM_CART="cloudtm"
-export MONITOR_PID="${OPENSHIFT_HOMEDIR}/${HAPROXY_CART}/run/monitor.pid"
-
+cartridge_type=$(get_cartridge_name_from_path)
+cartridge_cloudtm="cloudtm"
 if ! [ $# -eq 1 ]
 then
     echo "Usage: \$0 [start|restart|graceful|graceful-stop|stop]"
     exit 1
 fi
 
+CART_DIR=$OPENSHIFT_HOMEDIR/$cartridge_type
+
+APP_CLOUDTM=${CART_DIR}/"$cartridge_cloudtm"
+#APP_CLOUDTM_TMP_DIR="$APP_CLOUDTM"/tmp
+APP_CLOUDTM_BIN_DIR="$APP_CLOUDTM"/bin
+#APP_CLOUDTM_RUN_DIR="$APP_CLOUDTM"/run
+
+MONITOR_PID_FILE="$APP_CLOUDTM"/run/monitor.pid
+MONITOR_CFG_FILE="$APP_CLOUDTM"/conf/csvReporter.cfg
+MONITOR_LOG_FILE="$APP_CLOUDTM"/log/monitor.log
+
 validate_run_as_user
 
-. app_ctl_pre.sh
+#. app_ctl_pre.sh
 
 function isrunning() {
-    if [ -f "${MONITOR_PID}" ]; then
-        monitor_pid=`cat $MONITOR_PID 2> /dev/null`
-        [ -z "$monitor_pid" ]  &&  return 1
-        current_user=`id -u`
-        if `ps --pid $monitor_pid > /dev/null 2>&1` ||     \
-           `pgrep -x WPMonitor -u $current_user > /dev/null 2>&1`; then
-            return 0
-        fi
+    if [ -f "$MONITOR_PID_FILE" ]; then
+      monitorpid=$(cat $MONITOR_PID_FILE);
+      if /bin/ps --pid $monitorpid 1>&2 >/dev/null;
+      then
+        return 0
+      fi
     fi
+    # not running
     return 1
 }
 
-#function ping_server_gears() {
-#    #  Ping the server gears and wake 'em up on startup.
-#    gear_registry=$OPENSHIFT_HOMEDIR/${HAPROXY_CART}/conf/gear-registry.db
-#    for geardns in $(cut -f 2 -d ';' "$gear_registry"); do
-#        [ -z "$geardns" ]  ||  curl "http://$geardns/" > /dev/null 2>&1  ||  :
-#    done
-#}
-
-function wait_to_start() {
-   ep=$(grep "listen stats" $OPENSHIFT_HOMEDIR/${HAPROXY_CART}/conf/haproxy.cfg | sed 's#listen\s*stats\s*\(.*\)#\1#')
-   i=0
-   while ( ! curl "http://$ep/haproxy-status/;csv" &> /dev/null )  && [ $i -lt 10 ]; do
-       sleep 1
-       i=$(($i + 1))
-   done
-
-   if [ $i -ge 10 ]; then
-      echo "`date`: HAProxy status check - max retries ($i) exceeded" 1>&2
-   fi
-}
-
-
-#function _stop_haproxy_ctld_daemon() {
-#    haproxy_ctld_daemon stop 2>&1
-#}
-
-#function _start_haproxy_ctld_daemon() {
-#    disable_as="${OPENSHIFT_REPO_DIR}/.openshift/markers/disable_auto_scaling"
-#    [ -f "$disable_as" ]  &&  return 0
-#    _stop_haproxy_ctld_daemon  ||  :
-#    haproxy_ctld_daemon start 2>&1
+#function wait_to_start() {
+#   ep=$(grep "listen stats" $OPENSHIFT_HOMEDIR/${HAPROXY_CART}/conf/haproxy.cfg | sed 's#listen\s*stats\s*\(.*\)#\1#')
+#   i=0
+#   while ( ! curl "http://$ep/haproxy-status/;csv" &> /dev/null )  && [ $i -lt 10 ]; do
+#       sleep 1
+#       i=$(($i + 1))
+#   done
+#
+#   if [ $i -ge 10 ]; then
+#      echo "`date`: HAProxy status check - max retries ($i) exceeded" 1>&2
+#   fi
 #}
 
 
 function _start_monitor_service() {
-#    set_app_state started
-    if ! isrunning
-    then
-#        src_user_hook pre_start_${CARTRIDGE_TYPE}
-#        ping_server_gears
-        /usr/sbin/haproxy -f $OPENSHIFT_HOMEDIR/${HAPROXY_CART}/conf/haproxy.cfg > $OPENSHIFT_HOMEDIR/${HAPROXY_CART}/logs/haproxy.log 2>&1
-        _start_haproxy_ctld_daemon
-#        wait_to_start
-#        run_user_hook post_start_${CARTRIDGE_TYPE}
-    else
-        echo "WPMonitor already running" 1>&2
-#        wait_to_start
-    fi
+	if isrunning; then
+		echo "WPMonitor already running" 1>&2
+	else
+#		java -cp .:/usr/libexec/stickshift/cartridges/embedded/haproxy-1.4/info/bin/WpmCsvReporter.jar eu.cloudtm.reporter.CsvReporter \
+#			csvReporter.cfg > $MONITOR_LOG_FILE 2>&1 &
+
+		java -cp .:"$APP_CLOUDTM_BIN_DIR"/WPMonitor.jar eu.cloudtm.reporter.CsvReporter $MONITOR_CFG_FILE  > $MONITOR_LOG_FILE 2>&1 &
+		PROCESS_ID=$!
+		echo $PORCESS_ID > $MONITOR_PID_FILE;
+	fi
 }
 
 

@@ -56,8 +56,8 @@ cp abstract/info/connection-hooks/set-db-connection-info build/"$cart"/info/conn
 cp abstract/info/connection-hooks/set-nosql-db-connection-info build/"$cart"/info/connection-hooks/set-nosql-db-connection-info
 cp abstract/info/bin/sync_gears.sh build/"$cart"/info/bin/sync_gears.sh
 cp abstract/info/bin/restore_tar.sh build/"$cart"/info/bin/restore_tar.sh
-cp abstract-jboss/info/bin/app_ctl.sh build/"$cart"/info/bin/app_ctl.sh
-cp abstract-jboss/info/bin/app_ctl_impl.sh build/"$cart"/info/bin/app_ctl_impl.sh
+#cp abstract-jboss/info/bin/app_ctl.sh build/"$cart"/info/bin/app_ctl.sh
+#cp abstract-jboss/info/bin/app_ctl_impl.sh build/"$cart"/info/bin/app_ctl_impl.sh
 cp abstract-jboss/info/bin/deploy_httpd_proxy.sh build/"$cart"/info/bin/deploy_httpd_proxy.sh
 cp abstract-jboss/info/bin/deploy.sh build/"$cart"/info/bin/deploy.sh
 cp abstract-jboss/info/connection-hooks/publish_jboss_cluster build/"$cart"/info/connection-hooks/publish_jboss_cluster

@@ -122,24 +122,6 @@ mkdir -p $JAVA_PREFS_DIR
 APP_JBOSS_TMP_DIR="$APP_JBOSS"/standalone/tmp
 mkdir -p ${APP_JBOSS_TMP_DIR}
 
-
-#########################
-# CloudTM's directories # 
-#########################
-#cloudtm_cartridge="cloudtm"
-#CLOUDTM_INSTANCE_DIR=$(get_cartridge_instance_dir "$cloudtm_cartridge")
-#create_cartridge_instance_dir "$cloudtm_cartridge"
-#pushd "$CLOUDTM_INSTANCE_DIR" > /dev/null
-#mkdir -p conf run logs
-#popd > /dev/null
-##
-
-#################################
-# CloudTM's configuration files #
-#################################
-#$CLOUDTM_CARTRIDGE_ROOT/bin/monitor/deploy_monitor_config.sh $application $uuid $IP
-##
-
 #
 # Find an open localhost IP
 #
@@ -181,9 +163,12 @@ pushd "$JBOSS_INSTANCE_DIR" > /dev/null
 #########################
 mkdir -p cloudtm
 cd cloudtm
-mkdir -p conf run logs
+mkdir -p conf run logs bin
+
+# Link to WPMonitor
+ln -s ${CLOUDTM_CARTRIDGE_ROOT}/info/bin/monitor/WPMonitor.jar bin/WPMonitor.jar
+
 popd > /dev/null
-##
 
 #################################
 # CloudTM's configuration files #
