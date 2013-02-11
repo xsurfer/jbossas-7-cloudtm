@@ -70,6 +70,8 @@ Publishes:
     Type: "NET_TCP:gear-endpoint-info"
   publish-jmx-endpoint:
     Type: "NET_TCP:jmx-endpoint-info"
+  publish-master-endpoint:
+    Type: "NET_TCP:master-endpoint-info"
 #  publish-jgroups-cluster:
 #    Type: "NET_TCP:jgroups-cluster-info"
 Subscribes:
@@ -87,12 +89,15 @@ Subscribes:
 #    Type: "NET_TCP:jboss-remoting-info"
   set-jmx-endpoints:
     Type: "NET_TCP:jmx-endpoint-info"
+  set-master-endpoint:
+    Type: "NET_TCP:master-endpoint-info"
 #  set-jgroups-cluster:
 #    Type: "NET_TCP:jgroups-cluster-info"
 Endpoints:
   - PROXY_PORT: 8080
   - CLUSTER_PROXY_PORT: 7800
-  - MESSAGING_PORT: 5445
-  - MESSAGING_THROUGHPUT_PORT: 5455
+# - MESSAGING_PORT: 5445
+# - MESSAGING_THROUGHPUT_PORT: 5455
 # - REMOTING_PORT: 4447
   - JMX_PROXY_PORT: 10000
+  - LOCAL_MASTER_PORT: 2103
