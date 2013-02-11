@@ -14,6 +14,7 @@ then
     exit 1
 fi
 
+cartridge_type="jbossas-7-cloudtm"
 CART_DIR=$OPENSHIFT_HOMEDIR/$cartridge_type
 
 APP_CLOUDTM=${CART_DIR}/"$cartridge_cloudtm"
@@ -23,10 +24,10 @@ APP_CLOUDTM_BIN_DIR="$APP_CLOUDTM"/bin
 
 MONITOR_PID_FILE="$APP_CLOUDTM"/run/monitor.pid
 MONITOR_CFG_FILE="$APP_CLOUDTM"/conf/csvReporter.cfg
-MONITOR_LOG_FILE="$APP_CLOUDTM"/log/monitor.log
+MONITOR_LOG_FILE="$APP_CLOUDTM"/logs/monitor_redirected.log
 
 set -x
-exec > $APP_CLOUDTM/tmp/debug-monitor_ctl.sh 2>&1
+#exec > $APP_CLOUDTM/tmp/debug-monitor_ctl.sh 2>&1
 
 validate_run_as_user
 
@@ -35,9 +36,11 @@ validate_run_as_user
 function isrunning() {
     if [ -f "$MONITOR_PID_FILE" ]; then
       monitorpid=$(cat $MONITOR_PID_FILE);
-      if /bin/ps --pid $monitorpid 1>&2 >/dev/null;
-      then
-        return 0
+      if [ ! -z "$monitorpid" ]; then
+        if /bin/ps --pid $monitorpid 1>&2 >/dev/null ;
+        then
+          return 0
+        fi
       fi
     fi
     # not running
@@ -65,7 +68,9 @@ function _start_monitor_service() {
 #		java -cp .:/usr/libexec/stickshift/cartridges/embedded/haproxy-1.4/info/bin/WpmCsvReporter.jar eu.cloudtm.reporter.CsvReporter \
 #			csvReporter.cfg > $MONITOR_LOG_FILE 2>&1 &
 
-		java -cp .:"$APP_CLOUDTM_BIN_DIR"/WPMonitor.jar eu.cloudtm.reporter.CsvReporter $MONITOR_CFG_FILE  > $MONITOR_LOG_FILE 2>&1 &
+		pushd $APP_CLOUDTM/conf
+		java -cp .:"$APP_CLOUDTM_BIN_DIR"/WPMonitor.jar eu.cloudtm.reporter.CsvReporter csvReporter.cfg > $MONITOR_LOG_FILE 2>&1 &
+		popd
 		PROCESS_ID=$!
 		echo $PORCESS_ID > $MONITOR_PID_FILE;
 	fi

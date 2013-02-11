@@ -31,9 +31,9 @@ cat <<EOF > "$CLOUDTM_DIR/conf/csvReporter.cfg.template"
 reporter.updateInterval=1
 
 reporter.logging.level=TRACE
-reporter.logging.file=log.out
+reporter.logging.file=../logs/monitor.log
 
-reporter.output_file=/tmp/csv/report.csv
+reporter.output_file=../tmp/report.csv
 reporter.memory_units=GB
 #reporter.custom_attr=eu.cloudtm.reporter.customattributes.CommitLatency,eu.cloudtm.reporter.customattributes.RadargunWorkload
 reporter.resource_manager=eu.cloudtm.reporter.manager.jmx.JmxResourceManager
