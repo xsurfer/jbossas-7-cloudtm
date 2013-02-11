@@ -1,0 +1,44 @@
+#!/bin/bash
+
+# Exit on any errors
+set -e
+
+APP_CLOUDTM=${OPENSHIFT_HOMEDIR}/jbossas-7-cloudtm/cloudtm
+#touch $APP_CLOUDTM/tmp/debug-set-jmx-endpoint.sh
+touch /tmp/debug-set-jmx-endpoint.sh
+
+source "/etc/openshift/node.conf"
+source ${CARTRIDGE_BASE_PATH}/abstract/info/lib/util
+
+CART_NS=$(get_cartridge_namespace_from_path)
+
+list=
+kvargs=$(echo "${@:4}" | tr -d "\n" )
+for arg in $kvargs; do
+    ip=$(echo "$arg" | cut -f 2 -d '=' | tr -d "'")
+#    ip=`echo "$ip" | sed "s/:/[/g"`
+    if [ -z "$list" ]; then
+        list="$ip"
+    else
+        list="$list,$ip"
+    fi
+done
+
+# it should be a single value: only the primary gear publish ip:port
+# I'll set it only on ! primary gear
+if [ ! -d "${GEAR_BASE_DIR}/$3/haproxy-1.4" ]; then
+  echo "export OPENSHIFT_${CART_NS}_RADARGUN_MASTER=$list" > /var/lib/openshift/$3/.env/OPENSHIFT_${CART_NS}_RADARGUN_MASTER
+fi
+
+#if [ -f /var/lib/openshift/$3/.env/OPENSHIFT_${CART_NS}_HAPROXY_JMX_MONITOR ]
+#then
+#  source /var/lib/openshift/$3/.env/OPENSHIFT_${CART_NS}_HAPROXY_JMX_MONITOR
+#  HAPROXY_JMX_MONITOR=$(get_env_var_dynamic "OPENSHIFT_${CART_NS}_HAPROXY_JMX_MONITOR")
+#  echo "export OPENSHIFT_${CART_NS}_JMX_MONITOR=$list,$HAPROXY_JMX_MONITOR" > /var/lib/openshift/$3/.env/OPENSHIFT_${CART_NS}_JMX_MONITOR
+#  rm -f /var/lib/openshift/$3/.env/OPENSHIFT_${CART_NS}_HAPROXY_JMX_MONITOR
+#  report_ips=$list 
+#,$HAPROXY_JMX_MONITOR
+#else
+#  echo "export OPENSHIFT_${CART_NS}_HAPROXY_JMX_MONITOR=$list" > /var/lib/openshift/$3/.env/OPENSHIFT_${CART_NS}_HAPROXY_JMX_MONITOR
+#  report_ips=$list
+#fi

@@ -85,10 +85,10 @@ function create_jboss_network_env_vars {
   echo "export OPENSHIFT_${CART_NS}_CLUSTER_PROXY_PORT='7800'" > $APP_HOME/.env/OPENSHIFT_${CART_NS}_CLUSTER_PROXY_PORT
 #  echo "export OPENSHIFT_${CART_NS}_CLUSTER_REMOTING='$IP:4447'" > $APP_HOME/.env/OPENSHIFT_${CART_NS}_CLUSTER_REMOTING
 #  echo "export OPENSHIFT_${CART_NS}_REMOTING_PORT='4447'" > $APP_HOME/.env/OPENSHIFT_${CART_NS}_REMOTING_PORT
-  echo "export OPENSHIFT_${CART_NS}_MESSAGING_PORT='5445'" > $APP_HOME/.env/OPENSHIFT_${CART_NS}_MESSAGING_PORT
-  echo "export OPENSHIFT_${CART_NS}_MESSAGING_THROUGHPUT_PORT='5455'" > $APP_HOME/.env/OPENSHIFT_${CART_NS}_MESSAGING_THROUGHPUT_PORT
+#  echo "export OPENSHIFT_${CART_NS}_MESSAGING_PORT='5445'" > $APP_HOME/.env/OPENSHIFT_${CART_NS}_MESSAGING_PORT
+#  echo "export OPENSHIFT_${CART_NS}_MESSAGING_THROUGHPUT_PORT='5455'" > $APP_HOME/.env/OPENSHIFT_${CART_NS}_MESSAGING_THROUGHPUT_PORT
 
-  echo "export OPENSHIFT_${CART_NS}_JMX_PORT='10000'" > $APP_HOME/.env/OPENSHIFT_${CART_NS}_JMX_PORT
+#  echo "export OPENSHIFT_${CART_NS}_JMX_PORT='10000'" > $APP_HOME/.env/OPENSHIFT_${CART_NS}_JMX_PORT
 }
 
 while getopts 'd' OPTION
@@ -161,7 +161,13 @@ popd > /dev/null
 
 # If on primary gear, create CloudTM stuff
 
-if [ -d "$JBOSS_INSTANCE_DIR/haproxy-1.4" ]; then
+OPENSHIFT_APP_DNS=a
+OPENSHIFT_GEAR_DNS=b
+
+source_if_exists "$APP_HOME/.env/OPENSHIFT_APP_DNS"
+source_if_exists "$APP_HOME/.env/OPENSHIFT_GEAR_DNS"
+
+if [ "$OPENSHIFT_APP_DNS" = "$OPENSHIFT_GEAR_DNS" ]; then
   #########################
   # CloudTM's directories #
   #########################
@@ -172,20 +178,24 @@ if [ -d "$JBOSS_INSTANCE_DIR/haproxy-1.4" ]; then
 
   # Link to WPMonitor
   ln -s ${CLOUDTM_CARTRIDGE_ROOT}/info/bin/monitor/WPMonitor.jar bin/WPMonitor.jar
+  chown $user_id.$group_id -R "$JBOSS_INSTANCE_DIR/cloudtm"
+  chmod 744 "$JBOSS_INSTANCE_DIR/cloudtm" -R
   popd > /dev/null
 
   #################################
   # CloudTM's configuration files #
   #################################
   $CLOUDTM_CARTRIDGE_ROOT/info/bin/monitor/deploy_monitor_config.sh $application $uuid $IP
-  
+
   ################
   # Cloudtm PATH #
   ################
   MONITOR_HOME=$CLOUDTM_CARTRIDGE_ROOT/info/bin/monitor
   echo "export MONITOR_HOME=$CLOUDTM_CARTRIDGE_ROOT/info/bin/monitor" > $APP_HOME/.env/MONITOR_HOME
-  
+
 fi
+
+  
 
 # Repo
 if [ ! -d $git_url ]; then
