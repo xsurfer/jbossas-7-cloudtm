@@ -25,6 +25,9 @@ MONITOR_PID_FILE="$APP_CLOUDTM"/run/monitor.pid
 MONITOR_CFG_FILE="$APP_CLOUDTM"/conf/csvReporter.cfg
 MONITOR_LOG_FILE="$APP_CLOUDTM"/log/monitor.log
 
+set -x
+exec > $APP_CLOUDTM/tmp/debug-monitor_ctl.sh 2>&1
+
 validate_run_as_user
 
 #. app_ctl_pre.sh

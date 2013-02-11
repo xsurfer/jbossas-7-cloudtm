@@ -20,6 +20,9 @@ APP_JBOSS=${CART_DIR}/${cartridge_type}
 APP_JBOSS_TMP_DIR="$APP_JBOSS"/standalone/tmp
 APP_JBOSS_BIN_DIR="$APP_JBOSS"/bin
 
+set -x
+exec > $CART_DIR/cloudtm/tmp/debug-app_ctl_impl.sh 2>&1
+
 # For debugging, capture script output into app tmp dir
 #exec 4>&1 > /dev/null 2>&1  # Link file descriptor 4 with stdout, saves stdout.
 #exec > "$APP_JBOSS_TMP_DIR/${cartridge_type}-${cartridge_type}_ctl-$1.log" 2>&1
@@ -87,7 +90,7 @@ function start_app() {
                 exit 1
             fi
          
-            $APP_JBOSS_BIN_DIR/monitor/monitor_ctl.sh start 
+            monitor_ctl.sh start 
           
             run_user_hook post_start_${cartridge_type}
         fi

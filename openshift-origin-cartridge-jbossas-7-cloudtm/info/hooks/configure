@@ -87,6 +87,12 @@ function create_jboss_network_env_vars {
   echo "export OPENSHIFT_${CART_NS}_REMOTING_PORT='4447'" > $APP_HOME/.env/OPENSHIFT_${CART_NS}_REMOTING_PORT
   echo "export OPENSHIFT_${CART_NS}_MESSAGING_PORT='5445'" > $APP_HOME/.env/OPENSHIFT_${CART_NS}_MESSAGING_PORT
   echo "export OPENSHIFT_${CART_NS}_MESSAGING_THROUGHPUT_PORT='5455'" > $APP_HOME/.env/OPENSHIFT_${CART_NS}_MESSAGING_THROUGHPUT_PORT
+
+  echo "export OPENSHIFT_${CART_NS}_JGROUPS_PROXY_PORT='7800'" > $APP_HOME/.env/OPENSHIFT_${CART_NS}_JGROUPS_PROXY_PORT
+  echo "export OPENSHIFT_${CART_NS}_JMX_PORT='10000'" > $APP_HOME/.env/OPENSHIFT_${CART_NS}_JMX_PORT
+#  - JGROUPS_PROXY_PORT: 7800
+#  - JMX_PORT: 10000
+
 }
 
 while getopts 'd' OPTION
@@ -163,7 +169,7 @@ pushd "$JBOSS_INSTANCE_DIR" > /dev/null
 #########################
 mkdir -p cloudtm
 cd cloudtm
-mkdir -p conf run logs bin
+mkdir -p conf run logs bin tmp
 
 # Link to WPMonitor
 ln -s ${CLOUDTM_CARTRIDGE_ROOT}/info/bin/monitor/WPMonitor.jar bin/WPMonitor.jar
@@ -242,7 +248,13 @@ fi
 M2_HOME=/etc/alternatives/maven-3.0
 echo "export JAVA_HOME=$JAVA_HOME" > $APP_HOME/.env/JAVA_HOME
 echo "export M2_HOME=$M2_HOME" > $APP_HOME/.env/M2_HOME
-echo "export PATH=$JAVA_HOME/bin:$M2_HOME/bin:$PATH" > $APP_HOME/.env/PATH
+
+#### Adding Cloudtm PATH
+MONITOR_HOME=$CLOUDTM_CARTRIDGE_ROOT/info/bin/monitor
+echo "export MONITOR_HOME=$CLOUDTM_CARTRIDGE_ROOT/info/bin/monitor" > $APP_HOME/.env/MONITOR_HOME
+####
+
+echo "export PATH=$JAVA_HOME/bin:$M2_HOME/bin:$MONITOR_HOME:$PATH" > $APP_HOME/.env/PATH
 
 observe_setup_env_uservars_dir
 

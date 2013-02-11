@@ -3,9 +3,8 @@
 # Exit on any errors
 set -e
 
-#set -x
-exec >> /tmp/debug-set-jmx-endpoints.log.$$ 2>&1
-
+APP_CLOUDTM=${OPENSHIFT_HOMEDIR}/jbossas-7-cloudtm/cloudtm
+echo "ok" > $APP_CLOUDTM/tmp/debug-set-jgroups-cluster.sh
 
 source "/etc/openshift/node.conf"
 source ${CARTRIDGE_BASE_PATH}/abstract/info/lib/util

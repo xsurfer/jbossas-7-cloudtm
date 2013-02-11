@@ -4,9 +4,9 @@
 
 # Exit on any errors
 set -e
-#set -x
-#exec >> /tmp/debug-publish-jmx-endpoints.log.$$ 2>&1
 
+APP_CLOUDTM=${OPENSHIFT_HOMEDIR}/jbossas-7-cloudtm/cloudtm
+echo "ok" > $APP_CLOUDTM/tmp/debug-publish-jmx-endpoint.sh
 
 function print_help {
     echo "Usage: $0 app-name namespace uuid"
@@ -33,10 +33,12 @@ source ${CARTRIDGE_BASE_PATH}/abstract/info/lib/util
 
 CART_NS=$(get_cartridge_namespace_from_path)
 
-source ${GEAR_BASE_DIR}/$3/.env/OPENSHIFT_${CART_NS}_JMX_PROXY_PORT
+source ${GEAR_BASE_DIR}/$3/.env/OPENSHIFT_${CART_NS}_JMX_PORT
 source ${GEAR_BASE_DIR}/$3/.env/OPENSHIFT_GEAR_DNS
 
-OPENSHIFT_CART_JMX_PROXY_PORT=$(get_env_var_dynamic "OPENSHIFT_${CART_NS}_JMX_PROXY_PORT")
+OPENSHIFT_CART_JMX_PORT=$(get_env_var_dynamic "OPENSHIFT_${CART_NS}_JMX_PORT")
 
-echo ${OPENSHIFT_GEAR_DNS}:${OPENSHIFT_CART_JMX_PROXY_PORT}
+echo ${OPENSHIFT_GEAR_DNS}:${OPENSHIFT_CART_JMX_PORT}
+
+# - JMX_PORT: 10000
 
