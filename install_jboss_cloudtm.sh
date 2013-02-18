@@ -6,6 +6,7 @@ yum install bc -y
 
 #rm -rf origin-server > /dev/null 2>&1
 #git clone https://github.com/openshift/origin-server.git
+#git checkout stage-2.0.22
 
 cart="openshift-origin-cartridge-jbossas-7-cloudtm"
 openshift_cartridges_dir="origin-server/cartridges"
@@ -19,7 +20,7 @@ pushd /opt
 #wget http://download.jboss.org/jbossas/7.1/jboss-as-7.1.1.Final/jboss-as-7.1.1.Final.tar.gz
 #tar xvzf jboss-as-7.1.1.Final.tar.gz jboss-as-7.1.1.Final/
 #ln -s /opt/jboss-as-7.1.1.Final /etc/alternatives/jbossas-7 > /dev/null 2>&1
-#ln -s /usr/share/maven /etc/alternatives/maven-3.0 > /dev/null 2>&1
+#ln -s /usr/local/apache-maven/apache-maven-3.0.4 /etc/alternatives/maven-3.0 > /dev/null 2>&1
 popd
 
 echo "Creating the cartridge"
