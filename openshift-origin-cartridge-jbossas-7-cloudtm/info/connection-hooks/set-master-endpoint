@@ -17,10 +17,13 @@ kvargs=$(echo "${@:4}" | tr -d "\n" )
 for arg in $kvargs; do
     ip=$(echo "$arg" | cut -f 2 -d '=' | tr -d "'")
 #    ip=`echo "$ip" | sed "s/:/[/g"`
-    if [ -z "$list" ]; then
+    if[ ! -z $ip ]; then
+      if [ -z "$list" ]; then
         list="$ip"
-    else
+      else
+        # it should never arrive here
         list="$list,$ip"
+      fi
     fi
 done
 
