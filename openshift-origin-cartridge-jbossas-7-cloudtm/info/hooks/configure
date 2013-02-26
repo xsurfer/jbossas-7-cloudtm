@@ -66,6 +66,10 @@ function create_repo {
 target
 __EOF__
     git init > /dev/null
+    git config user.email "perfabio87@gmail.com"
+    git config user.name "Fabio Perfetti"
+
+
     git add .openshift .gitignore *
     git commit -m 'Creating template' > /dev/null
     popd > /dev/null

@@ -6,7 +6,9 @@ yum install bc -y
 
 #rm -rf origin-server > /dev/null 2>&1
 #git clone https://github.com/openshift/origin-server.git
+#cd origin-server
 #git checkout stage-2.0.22
+#cd ..
 
 cart="openshift-origin-cartridge-jbossas-7-cloudtm"
 openshift_cartridges_dir="origin-server/cartridges"
