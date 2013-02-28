@@ -68,8 +68,8 @@ Publishes:
 #    Type: "NET_TCP:jboss-remoting-info"
   publish-gear-endpoint:
     Type: "NET_TCP:gear-endpoint-info"
-  publish-jmx-endpoint:
-    Type: "NET_TCP:jmx-endpoint-info"
+  publish-logservice-endpoint:
+    Type: "NET_TCP:logservice-endpoint-info"
   publish-master-endpoint:
     Type: "NET_TCP:master-endpoint-info"
 #  publish-jgroups-cluster:
@@ -87,8 +87,8 @@ Subscribes:
     Type: "NET_TCP:jboss-cluster-info"
 #  set_jboss_remoting:
 #    Type: "NET_TCP:jboss-remoting-info"
-  set-jmx-endpoints:
-    Type: "NET_TCP:jmx-endpoint-info"
+  set-logservice-endpoints:
+    Type: "NET_TCP:logservice-endpoint-info"
   set-master-endpoint:
     Type: "NET_TCP:master-endpoint-info"
 #  set-jgroups-cluster:
@@ -99,5 +99,5 @@ Endpoints:
 # - MESSAGING_PORT: 5445
 # - MESSAGING_THROUGHPUT_PORT: 5455
 # - REMOTING_PORT: 4447
-  - JMX_PROXY_PORT: 10000
-  - LOCAL_MASTER_PORT: 2103
+  - WPM_LOGSERVICE_PORT: 8000
+  - RADARGUN_MASTER_PORT: 2103
